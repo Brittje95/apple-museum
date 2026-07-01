@@ -1,170 +1,191 @@
 <?php
 /**
- * Defines custom field groups and save logic for the Apple Museum theme.
+ * Registers custom field groups for the Apple Museum theme.
+ *
+ * These field groups are defined in code so they remain version controlled
+ * and can be reused if the project later switches from SCF to ACF.
  */
 
-add_action( 'init', 'apple_museum_register_custom_fields' );
-add_action( 'add_meta_boxes', 'apple_museum_add_meta_boxes' );
-add_action( 'save_post', 'apple_museum_save_meta_boxes' );
-
-/**
- * Registers the theme's custom field metadata for secure storage.
- */
-function apple_museum_register_custom_fields() {
-	register_post_meta(
-		'museum_wishlist',
-		'apple_museum_wishlist_highlight',
-		array(
-			'show_in_rest'      => true,
-			'single'            => true,
-			'type'              => 'string',
-			'sanitize_callback' => 'sanitize_text_field',
-			'auth_callback'     => 'apple_museum_meta_auth_callback',
-		)
-	);
-
-	register_post_meta(
-		'museum_story',
-		'apple_museum_story_location',
-		array(
-			'show_in_rest'      => true,
-			'single'            => true,
-			'type'              => 'string',
-			'sanitize_callback' => 'sanitize_text_field',
-			'auth_callback'     => 'apple_museum_meta_auth_callback',
-		)
-	);
-
-	register_post_meta(
-		'post',
-		'apple_museum_news_source',
-		array(
-			'show_in_rest'      => true,
-			'single'            => true,
-			'type'              => 'string',
-			'sanitize_callback' => 'sanitize_text_field',
-			'auth_callback'     => 'apple_museum_meta_auth_callback',
-		)
-	);
-}
-
-/**
- * Meta authorization callback for custom field metadata.
- */
-function apple_museum_meta_auth_callback( $allowed, $meta_key, $post_id, $user_id, $cap, $caps ) {
-	return current_user_can( 'edit_post', $post_id );
-}
-
-/**
- * Registers admin meta boxes for theme-specific fields.
- */
-function apple_museum_add_meta_boxes() {
-	add_meta_box(
-		'apple_museum_wishlist_meta',
-		__( 'Wishlist Highlight', 'apple-museum' ),
-		'apple_museum_wishlist_meta_box_callback',
-		'museum_wishlist',
-		'side',
-		'core'
-	);
-
-	add_meta_box(
-		'apple_museum_story_meta',
-		__( 'Story Location', 'apple-museum' ),
-		'apple_museum_story_meta_box_callback',
-		'museum_story',
-		'side',
-		'core'
-	);
-
-	add_meta_box(
-		'apple_museum_news_meta',
-		__( 'News Source', 'apple-museum' ),
-		'apple_museum_news_meta_box_callback',
-		'post',
-		'side',
-		'core'
-	);
-}
-
-/**
- * Prints the wishlist highlight meta box.
- */
-function apple_museum_wishlist_meta_box_callback( $post ) {
-	wp_nonce_field( 'apple_museum_save_meta', 'apple_museum_meta_nonce' );
-	$value = get_post_meta( $post->ID, 'apple_museum_wishlist_highlight', true );
-	?>
-	<p>
-		<label for="apple_museum_wishlist_highlight"><?php esc_html_e( 'Short highlight text for this wishlist item.', 'apple-museum' ); ?></label>
-	</p>
-	<p>
-		<input type="text" id="apple_museum_wishlist_highlight" name="apple_museum_wishlist_highlight" value="<?php echo esc_attr( $value ); ?>" class="widefat" />
-	</p>
-	<?php
-}
-
-/**
- * Prints the story location meta box.
- */
-function apple_museum_story_meta_box_callback( $post ) {
-	wp_nonce_field( 'apple_museum_save_meta', 'apple_museum_meta_nonce' );
-	$value = get_post_meta( $post->ID, 'apple_museum_story_location', true );
-	?>
-	<p>
-		<label for="apple_museum_story_location"><?php esc_html_e( 'Where this story is located or originated.', 'apple-museum' ); ?></label>
-	</p>
-	<p>
-		<input type="text" id="apple_museum_story_location" name="apple_museum_story_location" value="<?php echo esc_attr( $value ); ?>" class="widefat" />
-	</p>
-	<?php
-}
-
-/**
- * Prints the news source meta box.
- */
-function apple_museum_news_meta_box_callback( $post ) {
-	wp_nonce_field( 'apple_museum_save_meta', 'apple_museum_meta_nonce' );
-	$value = get_post_meta( $post->ID, 'apple_museum_news_source', true );
-	?>
-	<p>
-		<label for="apple_museum_news_source"><?php esc_html_e( 'Source or publisher for this news article.', 'apple-museum' ); ?></label>
-	</p>
-	<p>
-		<input type="text" id="apple_museum_news_source" name="apple_museum_news_source" value="<?php echo esc_attr( $value ); ?>" class="widefat" />
-	</p>
-	<?php
-}
-
-/**
- * Saves custom field meta box values.
- */
-function apple_museum_save_meta_boxes( $post_id ) {
-	if ( ! isset( $_POST['apple_museum_meta_nonce'] ) ) {
-		return;
-	}
-
-	if ( ! wp_verify_nonce( $_POST['apple_museum_meta_nonce'], 'apple_museum_save_meta' ) ) {
-		return;
-	}
-
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-		return;
-	}
-
-	if ( ! current_user_can( 'edit_post', $post_id ) ) {
-		return;
-	}
-
-	$meta_fields = array(
-		'apple_museum_wishlist_highlight',
-		'apple_museum_story_location',
-		'apple_museum_news_source',
-	);
-
-	foreach ( $meta_fields as $field ) {
-		if ( array_key_exists( $field, $_POST ) ) {
-			$clean_value = sanitize_text_field( wp_unslash( $_POST[ $field ] ) );
-			update_post_meta( $post_id, $field, $clean_value );
+if ( ! function_exists( 'apple_museum_register_custom_fields' ) ) {
+	/**
+	 * Registers the theme's custom field groups.
+	 */
+	function apple_museum_register_custom_fields() {
+		if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+			return;
 		}
+
+		acf_add_local_field_group(
+			array(
+				'key'                   => 'group_apple_museum_wishlist',
+				'title'                 => __( 'Wishlist Item Details', 'apple-museum' ),
+				'fields'                => array(
+					array(
+						'key'           => 'field_apple_museum_wishlist_item_name',
+						'label'         => __( 'Item Name', 'apple-museum' ),
+						'name'          => 'item_name',
+						'type'          => 'text',
+						'instructions'  => __( 'Name of the item being requested.', 'apple-museum' ),
+						'required'      => 1,
+						'wrapper'       => array(
+							'width' => '50',
+						),
+					),
+					array(
+						'key'           => 'field_apple_museum_wishlist_description',
+						'label'         => __( 'Description', 'apple-museum' ),
+						'name'          => 'description',
+						'type'          => 'textarea',
+						'instructions'  => __( 'Describe the item and its condition or use.', 'apple-museum' ),
+						'rows'          => 4,
+						'wrapper'       => array(
+							'width' => '50',
+						),
+					),
+					array(
+						'key'           => 'field_apple_museum_wishlist_priority',
+						'label'         => __( 'Priority', 'apple-museum' ),
+						'name'          => 'priority',
+						'type'          => 'select',
+						'instructions'  => __( 'How urgently the museum needs this item.', 'apple-museum' ),
+						'choices'       => array(
+							'low'    => __( 'Low', 'apple-museum' ),
+							'medium' => __( 'Medium', 'apple-museum' ),
+							'high'   => __( 'High', 'apple-museum' ),
+						),
+						'default_value' => 'medium',
+						'allow_null'    => 0,
+						'multiple'      => 0,
+						'ui'            => 0,
+						'required'      => 1,
+						'wrapper'       => array(
+							'width' => '50',
+						),
+					),
+					array(
+						'key'           => 'field_apple_museum_wishlist_image',
+						'label'         => __( 'Image', 'apple-museum' ),
+						'name'          => 'image',
+						'type'          => 'image',
+						'instructions'  => __( 'Add an image of the requested item.', 'apple-museum' ),
+						'return_format' => 'id',
+						'preview_size'  => 'medium',
+						'library'       => 'all',
+						'wrapper'       => array(
+							'width' => '50',
+						),
+					),
+				),
+				'location'              => array(
+					array(
+						array(
+							'param'    => 'post_type',
+							'operator' => '==',
+							'value'    => 'museum_wishlist',
+						),
+					),
+				),
+				'menu_order'            => 0,
+				'position'              => 'normal',
+				'style'                 => 'default',
+				'label_placement'       => 'top',
+				'instruction_placement' => 'label',
+				'hide_on_screen'        => array(),
+				'active'                => true,
+				'description'           => '',
+				'show_in_rest'          => 0,
+			)
+		);
+
+		acf_add_local_field_group(
+			array(
+				'key'                   => 'group_apple_museum_story',
+				'title'                 => __( 'Story Details', 'apple-museum' ),
+				'fields'                => array(
+					array(
+						'key'           => 'field_apple_museum_story_title',
+						'label'         => __( 'Title', 'apple-museum' ),
+						'name'          => 'story_title',
+						'type'          => 'text',
+						'instructions'  => __( 'Short title for this story entry.', 'apple-museum' ),
+						'required'      => 1,
+						'wrapper'       => array(
+							'width' => '50',
+						),
+					),
+					array(
+						'key'           => 'field_apple_museum_story_year',
+						'label'         => __( 'Year / Date', 'apple-museum' ),
+						'name'          => 'story_year',
+						'type'          => 'date_picker',
+						'instructions'  => __( 'Select the year or date associated with this story.', 'apple-museum' ),
+						'display_format' => 'Y',
+						'return_format'  => 'Y',
+						'wrapper'       => array(
+							'width' => '50',
+						),
+					),
+					array(
+						'key'           => 'field_apple_museum_story_description',
+						'label'         => __( 'Description', 'apple-museum' ),
+						'name'          => 'story_description',
+						'type'          => 'wysiwyg',
+						'instructions'  => __( 'Describe this story entry.', 'apple-museum' ),
+						'tabs'          => 'all',
+						'toolbar'       => 'full',
+						'media_upload'  => 0,
+						'delay'         => 1,
+					),
+					array(
+						'key'           => 'field_apple_museum_story_image',
+						'label'         => __( 'Image', 'apple-museum' ),
+						'name'          => 'story_image',
+						'type'          => 'image',
+						'instructions'  => __( 'Add a supporting image for this story entry.', 'apple-museum' ),
+						'return_format' => 'id',
+						'preview_size'  => 'medium',
+						'library'       => 'all',
+					),
+					array(
+						'key'           => 'field_apple_museum_story_related_links',
+						'label'         => __( 'Related Links', 'apple-museum' ),
+						'name'          => 'related_links',
+						'type'          => 'repeater',
+						'instructions'  => __( 'Add one or more related links for this story entry.', 'apple-museum' ),
+						'layout'        => 'table',
+						'button_label'  => __( 'Add Link', 'apple-museum' ),
+						'sub_fields'    => array(
+							array(
+								'key'           => 'field_apple_museum_story_related_link_url',
+								'label'         => __( 'Link URL', 'apple-museum' ),
+								'name'          => 'link_url',
+								'type'          => 'url',
+								'placeholder'   => 'https://',
+							),
+						),
+					),
+				),
+				'location'              => array(
+					array(
+						array(
+							'param'    => 'post_type',
+							'operator' => '==',
+							'value'    => 'museum_story',
+						),
+					),
+				),
+				'menu_order'            => 0,
+				'position'              => 'normal',
+				'style'                 => 'default',
+				'label_placement'       => 'top',
+				'instruction_placement' => 'label',
+				'hide_on_screen'        => array(),
+				'active'                => true,
+				'description'           => '',
+				'show_in_rest'          => 0,
+			)
+		);
 	}
 }
+
+add_action( 'acf/init', 'apple_museum_register_custom_fields' );

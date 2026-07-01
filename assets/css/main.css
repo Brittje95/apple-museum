@@ -47,18 +47,18 @@ a:focus {
 }
 
 .site-header {
-	background: #ffffff;
+	background: var(--color-bg);
 	border-bottom: 1px solid var(--color-border);
 }
 
 .site-header-inner {
 	max-width: var(--max-width);
 	margin: 0 auto;
-	padding: 1rem;
+	padding: var(--spacing-24);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 1rem;
+	gap: var(--spacing-24);
 }
 
 .site-branding {
@@ -68,7 +68,7 @@ a:focus {
 
 .site-title,
 .site-title a {
-	font-size: 1.5rem;
+	font-size: var(--font-size-h4);
 	font-weight: 700;
 	color: var(--color-text);
 	margin: 0;
@@ -77,6 +77,8 @@ a:focus {
 .site-description {
 	margin: 0.35rem 0 0;
 	color: var(--color-muted);
+	font-size: var(--font-size-small);
+	line-height: var(--line-height-body);
 }
 
 .main-navigation {
@@ -87,9 +89,9 @@ a:focus {
 	display: none;
 	background: var(--color-accent);
 	border: none;
-	color: #fff;
-	padding: 0.75rem 1rem;
-	font-size: 0.95rem;
+	color: #ffffff;
+	padding: var(--spacing-16) var(--spacing-24);
+	font-size: var(--font-size-small);
 	cursor: pointer;
 }
 
@@ -98,7 +100,7 @@ a:focus {
 	margin: 0;
 	padding: 0;
 	display: flex;
-	gap: 1rem;
+	gap: var(--spacing-24);
 }
 
 .primary-menu li {
@@ -154,13 +156,15 @@ article {
 .site-footer-inner {
 	max-width: var(--max-width);
 	margin: 0 auto;
-	padding: 1rem;
+	padding: var(--spacing-24);
 	text-align: center;
 }
 
 .site-info {
 	margin: 0;
 	color: var(--color-muted);
+	font-size: var(--font-size-small);
+	line-height: var(--line-height-small);
 }
 
 .no-results {

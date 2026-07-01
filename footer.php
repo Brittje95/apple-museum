@@ -4,11 +4,7 @@
  */
 ?>
 
-<footer class="site-footer" role="contentinfo">
-	<div class="site-footer-inner">
-		<?php get_template_part( 'template-parts/footer/site-info' ); ?>
-	</div>
-</footer>
+<?php get_template_part( 'template-parts/footer/site-footer' ); ?>
 
 <?php wp_footer(); ?>
 </body>
