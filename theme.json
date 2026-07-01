@@ -1,0 +1,129 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "color": {
+      "palette": [
+        {
+          "name": "Background",
+          "slug": "color-bg",
+          "color": "#ffffff"
+        },
+        {
+          "name": "Text",
+          "slug": "color-text",
+          "color": "#0a0a0a"
+        },
+        {
+          "name": "Background Secondary",
+          "slug": "color-bg-secondary",
+          "color": "#f4f4f4"
+        },
+        {
+          "name": "Background Hover",
+          "slug": "color-bg-hover",
+          "color": "#1a1a1a"
+        },
+        {
+          "name": "Success",
+          "slug": "color-success",
+          "color": "#1e7f4f"
+        },
+        {
+          "name": "Error",
+          "slug": "color-error",
+          "color": "#c0392b"
+        }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        {
+          "name": "4px",
+          "slug": "space-4",
+          "size": "4px"
+        },
+        {
+          "name": "8px",
+          "slug": "space-8",
+          "size": "8px"
+        },
+        {
+          "name": "16px",
+          "slug": "space-16",
+          "size": "16px"
+        },
+        {
+          "name": "24px",
+          "slug": "space-24",
+          "size": "24px"
+        },
+        {
+          "name": "32px",
+          "slug": "space-32",
+          "size": "32px"
+        },
+        {
+          "name": "48px",
+          "slug": "space-48",
+          "size": "48px"
+        },
+        {
+          "name": "64px",
+          "slug": "space-64",
+          "size": "64px"
+        },
+        {
+          "name": "96px",
+          "slug": "space-96",
+          "size": "96px"
+        },
+        {
+          "name": "128px",
+          "slug": "space-128",
+          "size": "128px"
+        }
+      ]
+    },
+    "typography": {
+      "fontSizes": [
+        {
+          "name": "H1",
+          "slug": "h1",
+          "size": "56px",
+          "lineHeight": 1.1
+        },
+        {
+          "name": "H2",
+          "slug": "h2",
+          "size": "40px",
+          "lineHeight": 1.15
+        },
+        {
+          "name": "H3",
+          "slug": "h3",
+          "size": "28px",
+          "lineHeight": 1.2
+        },
+        {
+          "name": "H4",
+          "slug": "h4",
+          "size": "22px",
+          "lineHeight": 1.3
+        },
+        {
+          "name": "Body",
+          "slug": "body",
+          "size": "18px",
+          "lineHeight": 1.6
+        },
+        {
+          "name": "Small",
+          "slug": "small",
+          "size": "14px",
+          "lineHeight": 1.5
+        }
+      ]
+    }
+  }
+}

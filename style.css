@@ -1,0 +1,20 @@
+/*
+Theme Name: Apple Museum
+Theme URI: https://example.com/apple-museum
+Author: Britt Thijssen
+Author URI: https://example.com
+Description: A classic PHP WordPress theme for the Apple Museum example project.
+Version: 0.1.0
+Tested up to: 6.6
+Requires at least: 6.3
+Requires PHP: 8.1
+Text Domain: apple-museum
+Domain Path: /languages
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Tags: custom-background, custom-logo, custom-menu, featured-images, translation-ready
+*/
+
+/*
+ * Theme styles are loaded from assets/css/main.css.
+ */
