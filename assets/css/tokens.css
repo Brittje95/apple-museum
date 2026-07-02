@@ -1,10 +1,13 @@
 :root {
 	--color-bg: #ffffff;
-	--color-text: #0a0a0a;
+	--color-main-text: #0a0a0a;
 	--color-bg-secondary: #f4f4f4;
 	--color-bg-hover: #1a1a1a;
-	--color-success: #1e7f4f;
-	--color-error: #c0392b;
+	--color-bg-muted: #666666;
+	--color-bg-border: #b4b4b430;
+	--color-accent-soften: rgba(76, 122, 117, 0.1);
+	--color-badge-success: #1e7f4f;
+	--color-badge-error: #c0392b;
 
 	--spacing-4: 4px;
 	--spacing-8: 8px;
